@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOOKEELA | ดูบอลสด ตารางบอล ผลบอล ครบจบในที่เดียว</title>
+<meta name="description" content="DOOKEELA ดูบอลออนไลน์ ตารางบอลวันนี้ ผลบอล โปรแกรมถ่ายทอดสดทุกลีก อัปเดตเรียลไทม์">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A1210;          /* สนามยามค่ำ */
+  --surface:#101B17;
+  --surface-2:#15241E;
+  --line:#1E332B;
+  --chalk:#EAF4EE;       /* เส้นชอล์กสนาม */
+  --muted:#8FA89C;
+  --flood:#FFC24B;       /* ไฟสปอตไลท์ */
+  --live:#FF4D5E;
+  --pitch:#2FBF71;       /* เขียวสนาม */
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--chalk);
+  font-family:'Noto Sans Thai',system-ui,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  min-height:100vh;
+  background-image:
+    radial-gradient(1200px 400px at 50% -10%, rgba(47,191,113,.10), transparent 65%),
+    radial-gradient(700px 300px at 85% 0%, rgba(255,194,75,.06), transparent 70%);
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+h1,h2,h3,.display{font-family:'Kanit',sans-serif}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,18,16,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  max-width:1120px;margin:0 auto;padding:0 16px;
+  display:flex;align-items:center;gap:20px;height:60px;
+}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-mark{
+  width:34px;height:34px;border-radius:50%;
+  background:conic-gradient(var(--pitch) 0 50%, #1A7A4A 50% 100%);
+  display:grid;place-items:center;
+  border:2px solid var(--chalk);
+  box-shadow:0 0 18px rgba(47,191,113,.45);
+  font-size:17px;
+}
+.logo-text{font-family:'Kanit';font-weight:800;font-size:21px;letter-spacing:.5px}
+.logo-text em{font-style:normal;color:var(--pitch)}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{
+  padding:8px 13px;border-radius:8px;font-size:14px;font-weight:500;
+  color:var(--muted);white-space:nowrap;transition:.15s;
+}
+nav a:hover{color:var(--chalk);background:var(--surface-2)}
+nav a.active{color:#0A1210;background:var(--pitch);font-weight:600}
+.live-dot-nav{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--live);margin-right:6px;animation:pulse 1.4s infinite}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 60px}
+
+/* ---------- Marquee / hero strip ---------- */
+.ticker{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(90deg, rgba(255,77,94,.12), transparent 60%);
+  border:1px solid var(--line);border-radius:var(--radius);
+  padding:10px 16px;margin-bottom:22px;overflow:hidden;
+}
+.ticker .badge-live{flex-shrink:0}
+.ticker-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;color:var(--muted)}
+.ticker-text strong{color:var(--chalk)}
+
+/* ---------- League chips ---------- */
+.section-label{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Kanit';font-weight:600;font-size:15px;
+  color:var(--muted);margin:4px 0 12px;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.section-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:99px;padding:7px 14px;font-size:13.5px;font-weight:500;
+  color:var(--chalk);transition:.15s;
+}
+.chip:hover{border-color:var(--pitch);transform:translateY(-1px)}
+.chip.active{background:var(--pitch);color:#0A1210;border-color:var(--pitch);font-weight:600}
+.chip .flag{font-size:15px}
+.chip .count{
+  background:rgba(255,255,255,.12);border-radius:99px;
+  font-size:11.5px;padding:1px 7px;font-weight:600;
+}
+.chip.active .count{background:rgba(0,0,0,.18)}
+
+/* ---------- Tabs & date filter ---------- */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
+  align-items:center;margin-bottom:20px;
+}
+.tabs{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px;gap:2px}
+.tab{
+  background:none;border:none;color:var(--muted);
+  padding:7px 16px;border-radius:7px;font-size:14px;font-weight:500;transition:.15s;
+}
+.tab:hover{color:var(--chalk)}
+.tab.active{background:var(--pitch);color:#0A1210;font-weight:600}
+.tab .count{opacity:.75;font-size:12px;margin-left:4px}
+.dates{display:flex;gap:6px}
+.date-btn{
+  background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  border-radius:10px;padding:6px 14px;font-size:13px;line-height:1.3;text-align:center;transition:.15s;
+}
+.date-btn small{display:block;font-size:11px;opacity:.7}
+.date-btn:hover{color:var(--chalk)}
+.date-btn.active{border-color:var(--flood);color:var(--flood);background:rgba(255,194,75,.08)}
+
+/* ---------- League group ---------- */
+.league-group{margin-bottom:26px}
+.league-head{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  background:linear-gradient(90deg, var(--surface-2), var(--surface) 70%);
+  border:1px solid var(--line);
+  border-radius:var(--radius) var(--radius) 0 0;
+  border-left:4px solid var(--pitch);
+}
+.league-logo{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--line);
+  display:grid;place-items:center;font-size:17px;
+}
+.league-name{font-family:'Kanit';font-weight:600;font-size:16px}
+.league-country{font-size:12px;color:var(--muted)}
+.league-matches{
+  border:1px solid var(--line);border-top:none;
+  border-radius:0 0 var(--radius) var(--radius);
+  overflow:hidden;
+}
+
+/* ---------- Match row ---------- */
+.match{
+  display:grid;
+  grid-template-columns:74px 1fr auto;
+  align-items:center;gap:14px;
+  padding:13px 16px;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+  transition:.15s;
+}
+.match:last-child{border-bottom:none}
+.match:hover{background:var(--surface-2)}
+.match-time{text-align:center}
+.match-time .t{font-family:'Kanit';font-weight:600;font-size:16px;color:var(--flood)}
+.match-time .d{font-size:11px;color:var(--muted)}
+.match.is-live .match-time .t{color:var(--live)}
+.match.is-finished .match-time .t{color:var(--muted)}
+.teams{display:flex;flex-direction:column;gap:5px;min-width:0}
+.team{display:flex;align-items:center;gap:9px;min-width:0}
+.team-logo{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  display:grid;place-items:center;font-size:11px;font-weight:700;
+  font-family:'Kanit';color:#0A1210;
+}
+.team-name{font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team .score{margin-left:auto;font-family:'Kanit';font-weight:700;font-size:15px;color:var(--chalk);padding-left:10px}
+.team-logo-img{width:22px;height:22px;border-radius:50%;flex-shrink:0;object-fit:contain;background:#fff}
+.league-logo-img{width:24px;height:24px;object-fit:contain}
+.match-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.badge-live{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--live);color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:.5px;
+  border-radius:6px;padding:3px 9px;font-family:'Kanit';
+}
+.badge-live::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:pulse 1.2s infinite}
+.badge-soon{
+  font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-radius:6px;padding:3px 9px;
+}
+.badge-ft{
+  font-size:11px;font-weight:600;color:var(--muted);
+  background:var(--surface-2);border-radius:6px;padding:3px 9px;font-family:'Kanit';
+}
+.channel{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11.5px;color:var(--pitch);
+  background:rgba(47,191,113,.1);
+  border:1px solid rgba(47,191,113,.3);
+  border-radius:6px;padding:2px 8px;
+}
+.watch-btn{
+  background:var(--pitch);color:#0A1210;border:none;
+  font-family:'Kanit';font-weight:600;font-size:12.5px;
+  border-radius:7px;padding:6px 14px;transition:.15s;
+}
+.watch-btn:hover{filter:brightness(1.12);box-shadow:0 0 14px rgba(47,191,113,.4)}
+.match.is-live .watch-btn{background:var(--live);color:#fff}
+.match.is-live .watch-btn:hover{box-shadow:0 0 14px rgba(255,77,94,.45)}
+
+.datasource{
+  font-size:12.5px;color:var(--muted);margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--line);
+}
+.datasource.ok{color:var(--pitch);border-color:rgba(47,191,113,.3)}
+.datasource.warn{color:var(--flood);border-color:rgba(255,194,75,.3)}
+.datasource a{color:inherit;text-decoration:underline}
+.empty{
+  text-align:center;padding:60px 20px;color:var(--muted);
+  border:1px dashed var(--line);border-radius:var(--radius);
+}
+.empty .display{font-size:20px;color:var(--chalk);margin-bottom:6px}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);background:var(--surface)}
+.footer-inner{
+  max-width:1120px;margin:0 auto;padding:28px 16px;
+  display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;
+  color:var(--muted);font-size:13px;
+}
+.footer-links{display:flex;gap:18px}
+.footer-links a:hover{color:var(--chalk)}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@media (max-width:640px){
+  .header-inner{height:54px;gap:12px}
+  .logo-text{font-size:18px}
+  .match{grid-template-columns:58px 1fr;gap:10px}
+  .match-side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;padding-top:4px;border-top:1px dashed var(--line);margin-top:2px}
+  .filter-bar{flex-direction:column;align-items:stretch}
+  .tabs{justify-content:space-between}
+  .tab{padding:7px 10px;font-size:13px;flex:1;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <span class="logo-mark">⚽</span>
+      <span class="logo-text">DOO<em>KEELA</em></span>
+    </a>
+    <nav>
+      <a href="#" class="active" data-nav="all">หน้าแรก</a>
+      <a href="#" data-nav="live"><span class="live-dot-nav"></span>บอลสด</a>
+      <a href="#" data-nav="upcoming">โปรแกรมบอล</a>
+      <a href="#" data-nav="finished">ผลบอล</a>
+      <a href="#">ดูทีวี</a>
+      <a href="#">ข่าวบอล</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="ticker">
+    <span class="badge-live">LIVE</span>
+    <div class="ticker-text" id="tickerText"><strong>กำลังถ่ายทอดสดตอนนี้</strong> — เลื่อนดูแมตช์ที่ขึ้นป้ายสีแดงด้านล่างได้เลย</div>
+  </div>
+
+  <div class="datasource" id="dataSource">⏳ กำลังดึงข้อมูลบอลโลก 2026 แบบเรียลไทม์...</div>
+  <div class="datasource" id="feedSource">⏳ กำลังโหลดตารางบอลหลายลีก (data.json)...</div>
+
+  <div class="section-label">⚽ ลีกฟุตบอล</div>
+  <div class="chips" id="leagueChips"></div>
+
+  <div class="filter-bar">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="all">ทั้งหมด <span class="count" id="cAll"></span></button>
+      <button class="tab" data-tab="live">กำลังแข่ง <span class="count" id="cLive"></span></button>
+      <button class="tab" data-tab="upcoming">โปรแกรม <span class="count" id="cUp"></span></button>
+      <button class="tab" data-tab="finished">ผลบอล <span class="count" id="cFin"></span></button>
+    </div>
+    <div class="dates" id="dates">
+      <button class="date-btn active" data-date="all">ทั้งหมด</button>
+      <button class="date-btn" data-date="2026-07-15">เมื่อวาน<small>15/07</small></button>
+      <button class="date-btn" data-date="2026-07-16">วันนี้<small>16/07</small></button>
+      <button class="date-btn" data-date="2026-07-17">พรุ่งนี้<small>17/07</small></button>
+    </div>
+  </div>
+
+  <main id="matchList"></main>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="logo-text" style="font-size:17px">DOO<em style="font-style:normal;color:var(--pitch)">KEELA</em></div>
+      ดูบอลสด ตารางบอล ผลบอล ครบจบในที่เดียว
+    </div>
+    <div class="footer-links">
+      <a href="#">หน้าแรก</a><a href="#">โปรแกรมบอล</a><a href="#">ดูทีวี</a><a href="#">ข่าวบอล</a>
+    </div>
+    <div>© 2026 DOOKEELA — เว็บนำเสนอข้อมูลตารางแข่งขันเพื่อความบันเทิงเท่านั้น</div>
+  </div>
+</footer>
+
+<script>
+/* ================= ข้อมูลแมตช์ (ตัวอย่าง — ต่อ API จริงภายหลังได้) ================= */
+const LEAGUES = {
+  "worldcup": {name:"FIFA World Cup 2026",     country:"USA · Mexico · Canada", flag:"🏆"},
+  "epl-cup":  {name:"League Cup",              country:"Scotland",    flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿"},
+  "uel":      {name:"UEFA Europa League",      country:"World",       flag:"🏆"},
+  "seriea-br":{name:"Serie A",                 country:"Brazil",      flag:"🇧🇷"},
+  "mls":      {name:"Major League Soccer",     country:"USA",         flag:"🇺🇸"},
+  "ligamx":   {name:"Liga MX",                 country:"Mexico",      flag:"🇲🇽"},
+  "friendly": {name:"Friendlies Clubs",        country:"World",       flag:"🤝"},
+  "kleague":  {name:"K League 1",              country:"South Korea", flag:"🇰🇷"},
+  "copa-arg": {name:"Copa Argentina",          country:"Argentina",   flag:"🇦🇷"},
+};
+
+/* status: live | upcoming | finished */
+const MATCHES = [
+  {league:"uel",      date:"2026-07-17", time:"01:00", home:"อลูมิเนีย",            away:"เชอร์ริฟ ติราสโพล",      ch:"sportklub6", status:"upcoming"},
+  {league:"seriea-br",date:"2026-07-17", time:"05:30", home:"โบตาโฟโก้",            away:"ซานโตส",                 ch:"sportdigital", status:"upcoming"},
+  {league:"seriea-br",date:"2026-07-15", time:"05:30", home:"ฟลาเมงโก้",            away:"ปัลไมรัส",               ch:"sportdigital", status:"finished", hs:2, as:1},
+  {league:"mls",      date:"2026-07-16", time:"06:30", home:"มอนทรีออล",            away:"โตรอนโต้",               ch:"atvp1", status:"live", hs:1, as:1, min:"64'"},
+  {league:"mls",      date:"2026-07-16", time:"07:30", home:"ชิคาโก ไฟร์",          away:"แวนคูเวอร์ ไวท์แคปส์",   ch:"atvp2", status:"live", hs:0, as:2, min:"38'"},
+  {league:"mls",      date:"2026-07-17", time:"07:30", home:"เซนต์หลุยส์ ซิตี้",     away:"สปอร์ติง แคนซัส ซิตี้",  ch:"atvp3", status:"upcoming"},
+  {league:"mls",      date:"2026-07-17", time:"09:30", home:"ซีแอตเทิล ซาวน์เดอร์ส", away:"พอร์ทแลนด์ ทิมเบอร์ส",   ch:"atvp4", status:"upcoming"},
+  {league:"mls",      date:"2026-07-15", time:"09:25", home:"แอลเอ แกลักซี",        away:"ลอสแอนเจลิส เอฟซี",      ch:"atvp1", status:"finished", hs:0, as:3},
+  {league:"ligamx",   date:"2026-07-17", time:"10:10", home:"คลับ ติฮัวน่า",         away:"ติเกรส อูอานล์",          ch:"tudnusa", status:"upcoming"},
+  {league:"ligamx",   date:"2026-07-15", time:"08:00", home:"เลออน",                away:"แอตลาส",                 ch:"tudnusa", status:"finished", hs:1, as:1},
+  {league:"friendly", date:"2026-07-17", time:"00:00", home:"คลับ บรูกก์",           away:"ฮีเรนวีน",               ch:"event1", status:"upcoming"},
+  {league:"friendly", date:"2026-07-17", time:"01:45", home:"เบนฟิกา",              away:"บียาร์เรอัล",             ch:"event2", status:"upcoming"},
+  {league:"friendly", date:"2026-07-16", time:"20:30", home:"บาเซิ่ล",              away:"ยูเวนตุส",               ch:"event1", status:"live", hs:0, as:0, min:"12'"},
+  {league:"friendly", date:"2026-07-16", time:"22:00", home:"อาร์ดับเบิลยู โอเบอร์เฮาเซ่น", away:"ดอร์ทมุนด์",      ch:"skybundesliga1", status:"upcoming"},
+  {league:"kleague",  date:"2026-07-17", time:"17:30", home:"เชจู ยูไนเต็ด",         away:"โปฮัง สตีลเลอร์ส",       ch:"event4", status:"upcoming"},
+  {league:"kleague",  date:"2026-07-17", time:"17:30", home:"แทจอน ฮานะ ซิติเซน",   away:"อุลซัน เอชดี",           ch:"event1", status:"upcoming"},
+  {league:"kleague",  date:"2026-07-17", time:"17:30", home:"อินชอน ยูไนเต็ด",       away:"ช็อนบุก ฮุนได มอเตอร์ส", ch:"event3", status:"upcoming"},
+  {league:"kleague",  date:"2026-07-15", time:"17:30", home:"เอฟซี โซล",            away:"กวางจู เอฟซี",           ch:"event2", status:"finished", hs:2, as:0},
+  {league:"epl-cup",  date:"2026-07-17", time:"23:00", home:"อเบอร์ดีน",            away:"ควีนส์ ปาร์ค",           ch:"tpf4", status:"upcoming"},
+  {league:"copa-arg", date:"2026-07-17", time:"04:45", home:"ซาน ลอเรนโซ่",          away:"เดปอร์ติโว ริเยสตรา",     ch:"tycsports", status:"upcoming"},
+  {league:"copa-arg", date:"2026-07-17", time:"07:45", home:"ริเวอร์เพลท",           away:"อัลโดซีวี่",              ch:"tycsports", status:"upcoming"},
+];
+
+/* ================= ดึงข้อมูลหลายลีก: ไฟล์ data.json จาก GitHub Actions proxy ================= */
+/* GitHub Actions ดึงจาก API-Football (คีย์อยู่ใน Secrets) แล้วเขียนเป็น data.json
+   เว็บโหลดไฟล์นี้แบบ same-origin จึงไม่ติด CORS และคีย์ไม่หลุด
+   ตั้งค่า URL: ถ้าเสิร์ฟผ่าน GitHub Pages ใช้ "./data.json" ได้เลย */
+const FEED_URL = "./data.json";
+
+async function loadFeed(){
+  try{
+    const res = await fetch(FEED_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const data = await res.json();
+    if(!data.matches || !data.matches.length) return;
+
+    // รวม metadata ลีกจากฟีด
+    Object.assign(LEAGUES, data.leagues||{});
+    // ฟีดโหลดสำเร็จ → เอาข้อมูลตัวอย่างออกทั้งหมด เหลือแต่ข้อมูลจริง (ฟีด + บอลโลกสด)
+    for(let i=MATCHES.length-1;i>=0;i--) if(MATCHES[i]._sample) MATCHES.splice(i,1);
+    MATCHES.push(...data.matches);
+
+    const el = document.getElementById("feedSource");
+    if(el){
+      const upd = data.updated ? new Date(data.updated).toLocaleString("th-TH",{dateStyle:"short",timeStyle:"short"}) : "-";
+      el.className = "datasource ok";
+      el.innerHTML = `🟢 ตารางบอลหลายลีก ${data.matches.length} แมตช์ · อัปเดต ${upd} · แหล่ง API-Football (ผ่าน proxy)`;
+    }
+    render();
+  }catch(err){
+    const el = document.getElementById("feedSource");
+    if(el){
+      el.className = "datasource warn";
+      el.innerHTML = `⚠️ ยังไม่ได้เชื่อม data.json (${err.message}) — แสดงข้อมูลตัวอย่างลีกอื่นแทน ดูวิธีตั้งค่าใน README`;
+    }
+  }
+}
+
+/* ================= ดึงข้อมูลสด: FIFA World Cup 2026 API ================= */
+/* ฟรี ไม่ต้องใช้ API key, เปิด CORS — เรียกจากเบราว์เซอร์ได้ตรง ๆ
+   เอกสาร: https://worldcup26.ir/api-docs/  |  โค้ด: github.com/rezarahiminia/worldcup2026 */
+const WC_API = "https://worldcup26.ir/get/games";
+
+function mapWorldCup(g){
+  // local_date รูปแบบ "MM/DD/YYYY HH:MM" (เวลาสนาม)
+  const [datePart, timePart="00:00"] = (g.local_date||"").split(" ");
+  const [mm, dd, yyyy] = datePart.split("/");
+  const date = (yyyy && mm && dd) ? `${yyyy}-${mm}-${dd}` : "";
+  const finished = String(g.finished).toUpperCase() === "TRUE";
+  const notStarted = g.time_elapsed === "notstarted" || !g.time_elapsed;
+  const status = finished ? "finished" : (!notStarted ? "live" : "upcoming");
+  const home = g.home_team_name_en || g.home_team_label || "TBD";
+  const away = g.away_team_name_en || g.away_team_label || "TBD";
+  return {
+    league:"worldcup", date, time:timePart,
+    home, away, ch:"FIFA+ / bugaboo.tv",
+    status,
+    hs: Number(g.home_score)||0, as: Number(g.away_score)||0,
+    min: (status==="live") ? String(g.time_elapsed).replace(/[^0-9]/g,"")+"'" : ""
+  };
+}
+
+async function loadWorldCup(){
+  const el = document.getElementById("dataSource");
+  try{
+    const res = await fetch(WC_API, {headers:{Accept:"application/json"}});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const data = await res.json();
+    const games = Array.isArray(data) ? data : (data.games || []);
+    if(!games.length) throw new Error("empty");
+
+    const mapped = games.map(mapWorldCup).filter(m=>m.date);
+    // แทนที่ข้อมูลบอลโลกตัวอย่างด้วยข้อมูลจริง
+    for(let i=MATCHES.length-1;i>=0;i--) if(MATCHES[i].league==="worldcup") MATCHES.splice(i,1);
+    MATCHES.push(...mapped);
+
+    const live = mapped.filter(m=>m.status==="live").length;
+    const upd  = new Date().toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"});
+    el.className = "datasource ok";
+    el.innerHTML = `🟢 ข้อมูลบอลโลก 2026 สด ${mapped.length} แมตช์`
+      + (live? ` · กำลังแข่ง ${live} คู่` : "")
+      + ` · อัปเดต ${upd} · แหล่ง <a href="https://worldcup26.ir/api-docs/" target="_blank" rel="noopener">worldcup26.ir</a> (เวลาในตารางเป็นเวลาสนาม)`;
+    render();
+  }catch(err){
+    el.className = "datasource warn";
+    el.innerHTML = `⚠️ ดึงข้อมูลสดไม่สำเร็จ (${err.message}) — กำลังแสดงข้อมูลตัวอย่างแทน `
+      + `ลองรีเฟรช หรือทัวร์นาเมนต์อาจจบแล้ว`;
+  }
+}
+
+/* ================= สถานะตัวกรอง ================= */
+MATCHES.forEach(m => m._sample = true); // ทำเครื่องหมายว่าเป็นข้อมูลตัวอย่าง (จะถูกแทนเมื่อฟีดจริงโหลดสำเร็จ)
+let curTab = "all", curLeague = "all", curDate = "all";
+
+const TEAM_COLORS = ["#2FBF71","#FFC24B","#5EB6FF","#FF8A5E","#C792EA","#7FE0D4","#F2708A","#9CCC65"];
+const colorOf = name => TEAM_COLORS[[...name].reduce((a,c)=>a+c.charCodeAt(0),0) % TEAM_COLORS.length];
+const initOf = name => name.trim()[0] || "?";
+// โลโก้ลีก: ใช้ <img> ถ้ามี URL, ไม่งั้น emoji
+const leagueBadge = l => l.logo
+  ? `<img class="league-logo-img" src="${l.logo}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${l.flag||'⚽'}'}))">`
+  : `<span>${l.flag||"⚽"}</span>`;
+// โลโก้ทีม: ใช้ <img> ถ้ามี URL, ไม่งั้นตัวอักษรย่อบนพื้นสี
+const teamBadge = (name, logo) => logo
+  ? `<img class="team-logo-img" src="${logo}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'team-logo',style:'background:${colorOf(name)}',textContent:'${initOf(name)}'}))">`
+  : `<span class="team-logo" style="background:${colorOf(name)}">${initOf(name)}</span>`;
+
+function filtered(){
+  return MATCHES.filter(m =>
+    (curTab === "all"   || m.status === curTab) &&
+    (curLeague === "all"|| m.league === curLeague) &&
+    (curDate === "all"  || m.date === curDate)
+  );
+}
+
+function thDate(d){ const [,mm,dd]=d.split("-"); return `${dd}/${mm}`; }
+
+function render(){
+  /* นับจำนวนบนแท็บ (ตามลีก+วันที่ที่เลือก) */
+  const base = MATCHES.filter(m =>
+    (curLeague==="all"||m.league===curLeague) && (curDate==="all"||m.date===curDate));
+  cAll.textContent = base.length;
+  cLive.textContent = base.filter(m=>m.status==="live").length || "";
+  cUp.textContent  = base.filter(m=>m.status==="upcoming").length || "";
+  cFin.textContent = base.filter(m=>m.status==="finished").length || "";
+
+  /* ticker */
+  const lives = MATCHES.filter(m=>m.status==="live");
+  tickerText.innerHTML = lives.length
+    ? `<strong>สด ${lives.length} คู่:</strong> ` + lives.map(m=>`${m.home} ${m.hs}-${m.as} ${m.away} (${m.min})`).join(" • ")
+    : `<strong>ยังไม่มีแมตช์ถ่ายทอดสดตอนนี้</strong> — ดูโปรแกรมล่วงหน้าด้านล่าง`;
+
+  /* league chips */
+  const counts = {};
+  MATCHES.forEach(m => counts[m.league]=(counts[m.league]||0)+1);
+  leagueChips.innerHTML =
+    `<button class="chip ${curLeague==="all"?"active":""}" data-league="all">ทุกลีก <span class="count">${MATCHES.length}</span></button>` +
+    Object.entries(LEAGUES).filter(([k])=>counts[k]).map(([k,l]) =>
+      `<button class="chip ${curLeague===k?"active":""}" data-league="${k}">
+         ${leagueBadge(l)}${l.name}<span class="count">${counts[k]}</span>
+       </button>`).join("");
+
+  /* match list — จัดกลุ่มตามลีก */
+  const list = filtered();
+  if(!list.length){
+    matchList.innerHTML = `<div class="empty">
+      <div class="display">ไม่พบแมตช์ในตัวกรองนี้</div>
+      ลองเปลี่ยนแท็บ ลีก หรือวันที่ดูอีกครั้ง</div>`;
+    return;
+  }
+  const groups = {};
+  list.forEach(m => (groups[m.league] ||= []).push(m));
+
+  matchList.innerHTML = Object.entries(groups).map(([k, ms])=>{
+    const l = LEAGUES[k];
+    ms.sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+    return `<section class="league-group">
+      <div class="league-head">
+        <div class="league-logo">${leagueBadge(l)}</div>
+        <div>
+          <div class="league-name">${l.name}</div>
+          <div class="league-country">${l.country}</div>
+        </div>
+      </div>
+      <div class="league-matches">
+        ${ms.map(m=>{
+          const liveCls = m.status==="live" ? "is-live" : m.status==="finished" ? "is-finished" : "";
+          const badge = m.status==="live" ? `<span class="badge-live">LIVE ${m.min}</span>`
+                      : m.status==="finished" ? `<span class="badge-ft">จบแล้ว</span>`
+                      : `<span class="badge-soon">ยังไม่เริ่ม</span>`;
+          const btn = m.status==="live" ? "ดูสด" : m.status==="finished" ? "ไฮไลท์" : "ดูช่องทาง";
+          const score = h => m.status!=="upcoming" ? `<span class="score">${h?m.hs:m.as}</span>` : "";
+          return `<div class="match ${liveCls}">
+            <div class="match-time"><div class="t">${m.time}</div><div class="d">${thDate(m.date)}</div></div>
+            <div class="teams">
+              <div class="team">${teamBadge(m.home,m.homeLogo)}<span class="team-name">${m.home}</span>${score(1)}</div>
+              <div class="team">${teamBadge(m.away,m.awayLogo)}<span class="team-name">${m.away}</span>${score(0)}</div>
+            </div>
+            <div class="match-side">
+              ${badge}
+              ${m.ch ? `<span class="channel">📺 ${m.ch}</span>` : ""}
+              <button class="watch-btn">${btn}</button>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </section>`;
+  }).join("");
+}
+
+/* ================= Events ================= */
+tabs.addEventListener("click", e=>{
+  const b = e.target.closest(".tab"); if(!b) return;
+  curTab = b.dataset.tab;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t===b));
+  syncNav(); render();
+});
+dates.addEventListener("click", e=>{
+  const b = e.target.closest(".date-btn"); if(!b) return;
+  curDate = b.dataset.date;
+  document.querySelectorAll(".date-btn").forEach(t=>t.classList.toggle("active", t===b));
+  render();
+});
+leagueChips.addEventListener("click", e=>{
+  const b = e.target.closest(".chip"); if(!b) return;
+  curLeague = b.dataset.league;
+  render();
+});
+document.querySelector("nav").addEventListener("click", e=>{
+  const a = e.target.closest("a[data-nav]"); if(!a) return;
+  e.preventDefault();
+  curTab = a.dataset.nav;
+  document.querySelectorAll(`.tab`).forEach(t=>t.classList.toggle("active", t.dataset.tab===curTab));
+  syncNav(); render();
+  window.scrollTo({top:0});
+});
+function syncNav(){
+  document.querySelectorAll("nav a[data-nav]").forEach(a=>
+    a.classList.toggle("active", a.dataset.nav===curTab));
+}
+
+render();
+loadFeed();
+loadWorldCup();
+setInterval(() => { loadFeed(); loadWorldCup(); }, 60000); // รีเฟรชข้อมูลทุก 60 วินาที
+</script>
+</body>
+</html>
